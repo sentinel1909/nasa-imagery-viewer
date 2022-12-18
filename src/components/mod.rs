@@ -1,6 +1,6 @@
 // src/components/app.rs
 
-use yew::{function_component, html, Html, use_state, use_effect_with_deps};
+use yew::{function_component, html, Html, classes, use_state, use_effect_with_deps};
 use chrono::{Datelike, Local};
 use serde::Deserialize;
 use gloo_net::http::Request;
@@ -51,7 +51,7 @@ fn Content() -> Html {
                 <h3>{ "Explanation: " } </h3>
                 <p> {&fetched_data.explanation} </p>
                 <h3> { "Image: " } </h3>
-                <img src={fetched_data.url.clone()} alt={"NASA Astronomy Photo of the Day "} />
+                <img src={fetched_data.url.clone()} class={classes!("img-fluid")} alt={"NASA Astronomy Photo of the Day "} />
             </section>
         </main>
     }
@@ -72,7 +72,7 @@ fn Footer() -> Html {
 #[function_component]
 pub fn App() -> Html {
     html! { 
-        <div>
+        <div class={classes!("container")}>
             <Header />
             <Content />
             <Footer />
