@@ -4,6 +4,7 @@ use yew::{function_component, html, Html, classes, use_state, use_effect_with_de
 use chrono::{Datelike, Local};
 use serde::Deserialize;
 use gloo_net::http::Request;
+use url::Url;
 
 #[derive(Deserialize, Debug, Clone)]
 struct NASAData {
@@ -25,13 +26,16 @@ fn Header() -> Html {
 
 #[function_component]
 fn Content() -> Html {
+    let api_key = "apod?api_key=lsULnkmChaJlS3fZO85M3cnGA8TFCAm2peEfd9QS";
+    let api_url = Url::parse("https://api.nasa.gov/planetary/").unwrap();
+    let api_url = api_url.join(&api_key).expect("Failed to join URL");
     let fetched_data = use_state(|| NASAData{ date: "".to_string(), title: "".to_string(), explanation: "".to_string(), url: "".to_string() });
     {
         let fetched_data = fetched_data.clone();
         use_effect_with_deps(move |_| {
                let fetched_data = fetched_data.clone();
                wasm_bindgen_futures::spawn_local(async move {
-                    let fetched_nasa_data: NASAData = Request::get("https://api.nasa.gov/planetary/apod?api_key=lsULnkmChaJlS3fZO85M3cnGA8TFCAm2peEfd9QS")
+                    let fetched_nasa_data: NASAData = Request::get(&api_url.to_string())
                         .send()
                         .await
                         .unwrap()
