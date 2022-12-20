@@ -5,6 +5,8 @@ use chrono::{Datelike, Local};
 use serde::Deserialize;
 use gloo_net::http::Request;
 use url::Url;
+use dotenvy::dotenv;
+use std::env;
 
 #[derive(Deserialize, Debug, Clone)]
 struct NASAData {
@@ -26,7 +28,10 @@ fn Header() -> Html {
 
 #[function_component]
 fn Content() -> Html {
-    let api_key = "apod?api_key=lsULnkmChaJlS3fZO85M3cnGA8TFCAm2peEfd9QS";
+    let nasa_api_key = "lsULnkmChaJlS3fZO85M3cnGA8TFCAm2peEfd9QS";
+    // dotenv().ok();
+    // let nasa_api_key = env::var("NASAAPIKEY").expect("NASA_API_KEY must be set");
+    let api_key = ["apod?api_key=", &nasa_api_key].concat();
     let api_url = Url::parse("https://api.nasa.gov/planetary/").unwrap();
     let api_url = api_url.join(&api_key).expect("Failed to join URL");
     let fetched_data = use_state(|| NASAData{ date: "".to_string(), title: "".to_string(), explanation: "".to_string(), url: "".to_string() });
