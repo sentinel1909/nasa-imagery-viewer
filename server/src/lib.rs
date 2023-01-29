@@ -4,7 +4,7 @@ use std::path::PathBuf;
 use axum_extra::routing::SpaRouter;
 
 #[shuttle_service::main]
-async fn axum(#[shuttle_static_folder::StaticFolder(folder = "dist")] public_folder: PathBuf)
+async fn axum(#[shuttle_static_folder::StaticFolder(folder = "out")] public_folder: PathBuf)
              -> shuttle_service::ShuttleAxum {
 
     // initialise the router using the spa router function
