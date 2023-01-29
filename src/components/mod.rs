@@ -1,12 +1,15 @@
 // src/components/app.rs
 
 use yew::{function_component, html, Html, classes, use_state, use_effect_with_deps};
-use chrono::{Datelike, Local};
 use serde::Deserialize;
 use gloo_net::http::Request;
 use url::Url;
-use dotenvy::dotenv;
-use std::env;
+
+use crate::components::header::Header;
+use crate::components::footer::Footer;
+
+mod header;
+mod footer;
 
 #[derive(Deserialize, Debug, Clone)]
 struct NASAData {
@@ -17,20 +20,8 @@ struct NASAData {
 }
 
 #[function_component]
-fn Header() -> Html {
-    html! {
-        <header>
-            <h1> { "NASA Imagery Viewer" }</h1>
-            <h2> { "...a new photo or video every day"}</h2>
-        </header>
-    }
-}
-
-#[function_component]
 fn Content() -> Html {
     let nasa_api_key = "lsULnkmChaJlS3fZO85M3cnGA8TFCAm2peEfd9QS";
-    // dotenv().ok();
-    // let nasa_api_key = env::var("NASAAPIKEY").expect("NASA_API_KEY must be set");
     let api_key = ["apod?api_key=", &nasa_api_key].concat();
     let api_url = Url::parse("https://api.nasa.gov/planetary/").unwrap();
     let api_url = api_url.join(&api_key).expect("Failed to join URL");
@@ -63,18 +54,6 @@ fn Content() -> Html {
                 <img src={fetched_data.url.clone()} class={classes!("img-fluid")} alt={"NASA Astronomy Photo of the Day "} />
             </section>
         </main>
-    }
-}
-
-#[function_component]
-fn Footer() -> Html {
-    let year = Local::now().year();
-    html! {
-        <footer>
-            <section>
-                <p>{ "\u{00A9} " } {year} { " Jeffery D Mitchell | All Rights Reserved | Site created in WebAssembly with Yew for Rust" }</p>
-            </section>
-        </footer>
     }
 }
 
